@@ -3,7 +3,7 @@ import time
 from selenium.webdriver.common.by import By
 
 class Test():
-    def __init__(self, url):
+    def __init__(self, url) -> None:
         self.driver = webdriver.Chrome()
         self.driver.get(url)
     
@@ -23,5 +23,5 @@ class Test():
 
 if __name__ == "__main__":
     login_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
-    login_test.check_login()
+    print(login_test.check_login())
     login_test.close()
