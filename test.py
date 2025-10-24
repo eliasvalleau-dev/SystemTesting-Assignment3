@@ -2,23 +2,21 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
 
-driver = webdriver.Chrome() #start a session
+class Test():
+    def __init__(self, url):
+        self.driver = webdriver.Chrome()
+        self.driver.get(url)
+    
+    def check_login(self):
+        email_entry = self.driver.find_element(By.ID, "input-email")
+        email_entry.send_keys("elias.valle@student.uts.edu.au")
+        pass_entry = self.driver.find_element(By.ID, "input-password")
+        pass_entry.send_keys("Loginpage@")
+    
+    def close(self):
+        self.driver.quit()
 
-# navigate to a web page
-driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=common/home")
-
-title = driver.title # request browser information
-print(title)
-
-driver.implicitly_wait(0.5) # wait for 0.5 seconds
-text_box = driver.find_element(by=By.NAME, value="search") # find a specific text box
-submit_button = driver.find_element(by=By.CSS_SELECTOR, value="button") # find the only button on the page
-
-text_box.send_keys("Fatneek")
-
-
-
-time.sleep(10)
-driver.quit() #end a session
-
-
+if __name__ == "__main__":
+    login_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
+    login_test.check_login()
+    login_test.close()
