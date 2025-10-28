@@ -18,6 +18,17 @@ class Test():
             return True
         return False
     
+    
+    def submit_review(self) -> bool:
+        return False
+    
+    def comment_blog(self) -> bool:
+        return False
+    
+    def check_quantity(self) -> bool:
+        return False
+
+    
     def close(self) -> None:
         self.driver.quit()
 
@@ -25,3 +36,4 @@ if __name__ == "__main__":
     login_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
     print(login_test.check_login())
     login_test.close()
+    
