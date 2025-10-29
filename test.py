@@ -1,6 +1,7 @@
 from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import *
 
 class Test():
     def __init__(self, url) -> None:
@@ -15,9 +16,47 @@ class Test():
         submit_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/div/div[2]/div/div/form/input")
         submit_btn.click()
         if self.driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/account":
+            print("Login Successful")
             return True
+        print("Login Unsuccessful")
         return False
     
+    def check_compare_product(self) -> bool:
+        pass
+
+    def check_remove_comparison(self) -> bool:
+        pass
+
+    def check_modify_affiliate(self) -> bool:
+        if self.check_login() == False:
+            print("Failed to Modify Affiliate Information (Login Failed).")
+            return False
+        try:
+            edit_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/div[3]/div/a[1]")
+            edit_btn.click()
+            comp_entry = self.driver.find_element(By.ID, "input-company")
+            comp_entry.clear()
+            Test.modify_entry(comp_entry, "Test Inc")
+            web_entry = self.driver.find_element(By.ID, "input-website")
+            Test.modify_entry(web_entry, "https://www.example.com/")
+            tax_entry = self.driver.find_element(By.ID, "input-tax")
+            Test.modify_entry(tax_entry, "444444444")
+            cheque_option = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/fieldset[2]/div[2]/div/div[1]/label/input")
+            cheque_option.click()
+            cheque_name = self.driver.find_element(By.ID, "input-cheque")
+            Test.modify_entry(cheque_name, "John Smith")
+            confirm_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div/input")
+            confirm_btn.click()
+            alert = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div[1]").text
+            if alert == "Success: Your account has been successfully updated.":
+                print("Successfully Modified Affiliate Information.")
+                return True
+            print("Failed to Modify Affiliate Information (Incorrect Alert).")
+        except NoSuchElementException:
+            print("Failed to Modify Affiliate Information (Webdriver Couldn't Find Request Element).")
+        except Exception as e:
+            print(f"Failed to Modify Affiliate Information (Unknown Exception: {e})")
+        return False
     
     def submit_review(self) -> bool:
         return False
@@ -28,12 +67,22 @@ class Test():
     def check_quantity(self) -> bool:
         return False
 
+    def modify_entry(obj, text) -> None:
+        obj.clear()
+        obj.send_keys(text)
     
     def close(self) -> None:
         self.driver.quit()
 
 if __name__ == "__main__":
-    login_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
-    print(login_test.check_login())
-    login_test.close()
+    # Test for Comparing Products
+    #comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=20")
+
+    # Test for Removing Product Comparisons
+    #rem_comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/compare")
+
+    # Test for Modifying Affiliate Information
+    aff_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
+    aff_test.check_modify_affiliate()
+    aff_test.close()
     
