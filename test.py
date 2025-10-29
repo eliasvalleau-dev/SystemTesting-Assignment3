@@ -20,7 +20,8 @@ class Test():
 
         pass_entry = self.driver.find_element(By.ID, "input-password")
         pass_entry.send_keys("Loginpage@" + Keys.ENTER) 
-        
+        time.sleep(5)
+
         # Validation
         if self.driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/account":
             return True
@@ -61,6 +62,7 @@ class Test():
                 EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert.alert-success.alert-dismissible"))
             )
             if(success_alert.is_displayed()):
+                self.driver.save_screenshot("submitReview.png")
                 print("Successfully commented about the product, HTC Touch HD")
                 return True
         
@@ -87,10 +89,12 @@ class Test():
             blog_element.click()
 
             # Choose blog
+            time.sleep(5)
             blog_choice = WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located(((By.XPATH, "/html/body/div[1]/div[5]/div[1]/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div/div/div[1]/div/div[1]/a")))
             )
             blog_choice.click()
+            print("Successfully Navigated to a Blog Page")
 
             # Write comment & post
             comment_input = WebDriverWait(self.driver, 5).until(
@@ -99,13 +103,15 @@ class Test():
             comment_input.clear()
             comment_input.send_keys("This is a great blog post! Very informative and well written!!!")
             post_comment = self.driver.find_element(By.ID, "button-comment").click()
-            time.sleep(2)
+            print("Writing comment on blog")
+            time.sleep(5)
 
             # Validation
             success_alert = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert.alert-success.alert-dismissible"))
             )
             if(success_alert.is_displayed()):
+                # self.driver.save_screenshot("blogComment.png")
                 print("Successfully commented on blog")
                 return True
             
@@ -148,13 +154,12 @@ class Test():
             product_amount = WebDriverWait(self.driver, 15).until(
                 EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/input"))
             )
-            if product_amount.get_attribute("value") == "6":
-                remove_button = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/div/button[2]")
-                remove_button.click()
-                return True
-            
+            amount = product_amount.get_attribute("value")
+            # self.driver.save_screenshot("productQuantity.png")
             remove_button = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/div/button[2]")
             remove_button.click()
+            
+            return amount == "6"
 
         # Exception Handling 
         except NoSuchElementException:
@@ -171,8 +176,8 @@ class Test():
 
 if __name__ == "__main__":
     login_test = Test(url='https://ecommerce-playground.lambdatest.io/index.php?route=account/account')
-    print(login_test.check_submit_review())
+    # print(login_test.check_submit_review())
     # print(login_test.check_blog_comment())
-    # print(login_test.check_quantity())
+    print(login_test.check_quantity())
     login_test.close()
     
