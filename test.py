@@ -15,11 +15,7 @@ class Test():
         pass_entry.send_keys("Loginpage@")
         submit_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/div/div[2]/div/div/form/input")
         submit_btn.click()
-<<<<<<< Updated upstream
-=======
-        
-        # Validation
->>>>>>> Stashed changes
+
         if self.driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/account":
             print("Login Successful")
             return True
