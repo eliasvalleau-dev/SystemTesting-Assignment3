@@ -238,9 +238,9 @@ if __name__ == "__main__":
     #comp_test.close()
 
     # Test for Removing Product Comparisons
-    rem_comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=20")
-    rem_comp_test.check_remove_comparison()
-    rem_comp_test.close()
+    #rem_comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=20")
+    #rem_comp_test.check_remove_comparison()
+    #rem_comp_test.close()
 
     # Test for Modifying Affiliate Information
     #aff_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
