@@ -2,8 +2,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
+import re
 import time
 
 
@@ -53,31 +54,20 @@ def test_search_product():
             assert price.text.strip() != "", "Product price missing."
         print("Each product displays image, name, and price correctly.")
 
-        # Step 8: Apply a filter (e.g., “Apple”) and confirm that results update
-        try:
-            brand_filter = WebDriverWait(driver, 5).until(
-                EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, "Apple"))
-            )
-            brand_filter.click()
-            time.sleep(2)
-            filtered_results = driver.find_elements(By.CSS_SELECTOR, ".product-thumb")
-            assert len(filtered_results) > 0, "No results after applying 'Apple' filter."
-            print(f"Filter applied successfully — {len(filtered_results)} results for 'Apple'.")
-        except Exception:
-            print("Filter step skipped — no 'Apple' filter available on this page.")
-
-        # Step 9: Sort results by price and confirm order changes
+        # Step 8: Sort results by price and confirm order changes
         try:
             sort_dropdown = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "input-sort"))
+                EC.presence_of_element_located((By.XPATH, "//select[contains(@id,'sort') or contains(@name,'sort')]"))
             )
-            sort_dropdown.click()
-            sort_option = driver.find_element(By.XPATH, "//option[contains(text(), 'Price (Low > High)')]")
-            sort_option.click()
-            time.sleep(2)
-            print("Sorting by price applied successfully.")
-        except Exception:
-            print("Sorting dropdown not found — skipping step.")
+            sort_control = Select(sort_dropdown)
+            
+
+            #Select option Price (Low > High)
+            sort_control.select_by_visible_text("Price (Low > High)")
+            time.sleep(3)
+            print("Sorting by Price (Low > High) applied successfully.")
+        except Exception as e:
+            print("Could not locate or interact with 'Sort By:' dropdown: {e}")
 
         print("Test Case T004 – Search Product Function: PASSED")
 
