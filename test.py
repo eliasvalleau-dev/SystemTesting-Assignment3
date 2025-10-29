@@ -12,16 +12,13 @@ class Test():
         self.driver.get(url)
     
     def check_login(self) -> bool:
-        time.sleep(5)
-
         # User Login
         email_entry = WebDriverWait(self.driver, 5).until(
             EC.presence_of_element_located((By.ID, "input-email"))
         )
         email_entry.send_keys("elias.valle@student.uts.edu.au")
-        pass_entry = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((By.ID, "input-password"))
-        )
+
+        pass_entry = self.driver.find_element(By.ID, "input-password")
         pass_entry.send_keys("Loginpage@" + Keys.ENTER) 
         
         # Validation
@@ -33,6 +30,8 @@ class Test():
         if self.check_login() == False:
             print("Failed to login")
             return False
+        print("Succesfully Logged into Account")
+
         try:
             # Search for product
             search_bar = WebDriverWait(self.driver, 10).until(
@@ -45,6 +44,7 @@ class Test():
                 EC.presence_of_element_located((By.ID, "mz-product-grid-image-28-212469"))
             )
             product_element.click()
+            print("Successfully selected HTC Touch HD")
 
             # Insert review and submit
             input_rating = WebDriverWait(self.driver, 5).until(
@@ -54,17 +54,19 @@ class Test():
             input_description = self.driver.find_element(By.ID, "input-review")
             input_description.send_keys("I think this product is exceptionally well manufactured, great job!!")
             submit_button = self.driver.find_element(By.ID, "button-review").click()
+            print("Successfully rated product and wrote review")
 
             # Validation
             success_alert = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert.alert-success.alert-dismissible"))
             )
             if(success_alert.is_displayed()):
+                print("Successfully commented about the product, HTC Touch HD")
                 return True
         
         # Exception Handling 
         except NoSuchElementException:
-            print("Webdriver Could Not Find Requested Element")
+            print("Program Terminated. Webdriver Could Not Find Requested Element")
 
         except Exception as e:
             print(f"Webdriver Terminated Program Due To An Unknown Exception: {e}")
@@ -75,6 +77,7 @@ class Test():
         if self.check_login() == False:
             print("Failed to login")
             return False
+        print("Successfully Logged into Account")
         
         try:
             # Navigate to Blog Page
@@ -95,18 +98,20 @@ class Test():
             )
             comment_input.clear()
             comment_input.send_keys("This is a great blog post! Very informative and well written!!!")
-            post_comment = self.driver.find_element(By.ID, "button-comment").click()   
+            post_comment = self.driver.find_element(By.ID, "button-comment").click()
+            time.sleep(2)
 
             # Validation
             success_alert = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert.alert-success.alert-dismissible"))
             )
             if(success_alert.is_displayed()):
+                print("Successfully commented on blog")
                 return True
             
         # Exception Handling 
         except NoSuchElementException:
-            print("Webdriver Could Not Find Requested Element")
+            print("Program Terminated. Webdriver Could Not Find Requested Element")
 
         except Exception as e:
             print(f"Webdriver Terminated Due To An Unknown Exception{e}")
@@ -114,44 +119,49 @@ class Test():
         return False
     
     def check_quantity(self) -> bool:
-        if self.check_login() == False:
-            print("Failed to login")
-            return False
-        
-        # try:
-        # Search for product
-        search_bar = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "search"))
-        )
-        search_bar.send_keys("HTC Touch HD" + Keys.ENTER)
+        try:
+            # Search for product
+            search_bar = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.NAME, "search"))
+            )
+            search_bar.send_keys("HTC Touch HD" + Keys.ENTER)
 
-        # Select Product
-        product_element = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((By.ID, "mz-product-grid-image-53-212469"))
-        )
-        product_element.click()
+            # Select Product
+            product_element = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located((By.ID, "mz-product-grid-image-53-212469"))
+            )
+            product_element.click()
+            print("Successfully selected HTC Touch HD")
 
-        # Enter quantity & add to Cart
-        input_button = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[9]/div[1]/div[2]/div/div[2]/div[2]/div[10]/div/div[4]/div/div[1]/div/div[2]/button"))
-        )
-        for i in range(5):
-            input_button.click()
-            time.sleep(1)
-        checkout_button = self.driver.find_element(By.CSS_SELECTOR, "button[title='Buy now']").click()
+            # Enter quantity & add to Cart
+            input_button = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[9]/div[1]/div[2]/div/div[2]/div[2]/div[10]/div/div[4]/div/div[1]/div/div[2]/button"))
+            )
+            for i in range(5):
+                input_button.click()
+                time.sleep(1)
+                print(f"Quantity: {i+2}")
+            checkout_button = self.driver.find_element(By.CSS_SELECTOR, "button[title='Buy now']").click()
+            print()
 
-        # Validation
-        product_amount = WebDriverWait(self.driver, 15).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/input"))
-        )
-        if product_amount.get_attribute("value") == "6":
-            return True
-        remove_button = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/div/button[2]")
-        remove_button.click()
+            # Validation
+            product_amount = WebDriverWait(self.driver, 15).until(
+                EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/input"))
+            )
+            if product_amount.get_attribute("value") == "6":
+                remove_button = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/div/button[2]")
+                remove_button.click()
+                return True
+            
+            remove_button = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div[2]/div/div[1]/div[1]/table/tbody/tr/td[3]/div/div/button[2]")
+            remove_button.click()
 
-        # except Exception as e:
-        #     print(f"Webdriver Terminated Due To An Unknown Exception{e}")
-        print(product_amount.get_attribute("value"))
+        # Exception Handling 
+        except NoSuchElementException:
+            print("Program Terminated. Webdriver Could Not Find Requested Element")
+
+        except Exception as e:
+            print(f"Webdriver Terminated Program Due To An Unknown Exception: {e}")
         
         return False
 
@@ -160,10 +170,9 @@ class Test():
         self.driver.quit()
 
 if __name__ == "__main__":
-    login_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
-    # print(login_test.check_login())
-    # print(login_test.check_submit_review())
+    login_test = Test(url='https://ecommerce-playground.lambdatest.io/index.php?route=account/account')
+    print(login_test.check_submit_review())
     # print(login_test.check_blog_comment())
-    print(login_test.check_quantity())
+    # print(login_test.check_quantity())
     login_test.close()
     
