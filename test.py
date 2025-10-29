@@ -59,7 +59,40 @@ class Test():
 
 
     def check_remove_comparison(self) -> bool:
-        pass
+        # Check if Adding Process Works
+        if self.check_compare_product() == False:
+            print("Failed to Remove Products from Comparison (Adding Process Failed)")
+            return False
+        
+        # Click Remove Button
+        try:
+            remove_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/table/tbody[2]/tr/td[2]/a")
+            remove_btn.click()
+
+            # Check if Removal Alert Is Correct
+            if self.check_alert() == False:
+                print("Failed to Remove Products from Comparison (Removal Alert Was Missing/Incorrect).")
+                return False
+
+            # Check if Rows Have Been Reduced
+            elif len(self.driver.find_elements(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/table/tbody[1]/tr[1]")) == 1:
+                print("Successfully Removed Product from Comparison.")
+                return True
+            
+            # Exception Case if Number of Columns Aren't Reduced
+            else:
+                print("Failed to Remove Products from Comparison (Number of Columns Doesn't Match Expected).")
+                return False
+
+        # Exception for if Selenium Can’t Find a Given Element
+        except NoSuchElementException:
+            print("Failed to Remove Products from Comparison (Webdriver Couldn't Find Requested Element).")
+        
+        # Exception for Generic Errors
+        except Exception as e:
+            print(f"Failed to Remove Products from Comparison (Unknown Exception: {e})")
+        
+        return False
 
     def check_modify_affiliate(self) -> bool:
         # Check if User Has Logged In
@@ -145,6 +178,7 @@ class Test():
         return False
 
     def add_comparison(self, obj) -> bool:
+        '''Instance Method for Clicking the Product's Compare Button'''
         # Click Product and Then Click Compare Button
         try:
             obj.click()
@@ -155,11 +189,37 @@ class Test():
         
         # Exception for if Selenium Can’t Find a Given Element
         except NoSuchElementException:
-            print("Adding Product to Comparison Failed (Webdriver Couldn't Find Compare Button)")
+            print("Failed to Add Product to Comparison (Webdriver Couldn't Find Compare Button)")
         
         # Exception for Generic Errors
         except Exception as e:
-            print(f"Adding Product to Comparison Failed (Unknown Exception: {e}).")
+            print(f"Failed to Add Product to Comparison (Unknown Exception: {e}).")
+        
+        return False
+
+    def check_alert(self) -> bool:
+        '''Instance Method for Checking if Alert is Present (Causes Changes To Relevant XPATH)'''
+        # Get Alert Message
+        try:
+            alert = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div[1]").text
+
+            # Close Alert
+            alert_button = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div[1]")
+            alert_button.click()
+
+
+            # Determine if Alert Was Successful
+            if alert == "Success: You have modified your product comparison!\n×":
+                return True
+            return False
+        
+        # Exception for if Selenium Can’t Find a Given Element
+        except NoSuchElementException:
+            print("Failed to Remove Products From Comparison (Webdriver Couldn't Find Alert).")
+        
+        # Exception for Generic Errors
+        except Exception as e:
+            print(f"Failed to Removing Products From Comparison (Unknown Exception: {e}).")
         
         return False
 
@@ -173,12 +233,14 @@ class Test():
 
 if __name__ == "__main__":
     # Test for Comparing Products
-    comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=20")
-    comp_test.check_compare_product()
-    comp_test.close()
+    #comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=20")
+    #comp_test.check_compare_product()
+    #comp_test.close()
 
     # Test for Removing Product Comparisons
-    #rem_comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/compare")
+    rem_comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=20")
+    rem_comp_test.check_remove_comparison()
+    rem_comp_test.close()
 
     # Test for Modifying Affiliate Information
     #aff_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
