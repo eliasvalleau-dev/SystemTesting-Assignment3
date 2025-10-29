@@ -28,12 +28,18 @@ class Test():
         pass
 
     def check_modify_affiliate(self) -> bool:
+        
+        # Check if User Has Logged In
         if self.check_login() == False:
             print("Failed to Modify Affiliate Information (Login Failed).")
             return False
+        
         try:
+            # Open 'Edit Affiliate Information' Page
             edit_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/div[3]/div/a[1]")
             edit_btn.click()
+            
+            # Enter Affiliate Details
             comp_entry = self.driver.find_element(By.ID, "input-company")
             comp_entry.clear()
             Test.modify_entry(comp_entry, "Test Inc")
@@ -46,16 +52,25 @@ class Test():
             cheque_name = self.driver.find_element(By.ID, "input-cheque")
             Test.modify_entry(cheque_name, "John Smith")
             confirm_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/form/div/div/input")
+            
+            # Confirm Affiliate Details
             confirm_btn.click()
+            
+            # Check if Success Alert on Account Page Is Present
             alert = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div[1]").text
             if alert == "Success: Your account has been successfully updated.":
                 print("Successfully Modified Affiliate Information.")
                 return True
             print("Failed to Modify Affiliate Information (Incorrect Alert).")
+        
+        # Exception for if Selenium Can’t Find a Given Element
         except NoSuchElementException:
             print("Failed to Modify Affiliate Information (Webdriver Couldn't Find Request Element).")
+        
+        # Exception for Generic Errors
         except Exception as e:
             print(f"Failed to Modify Affiliate Information (Unknown Exception: {e})")
+        
         return False
     
     def submit_review(self) -> bool:
@@ -68,6 +83,7 @@ class Test():
         return False
 
     def modify_entry(obj, text) -> None:
+        '''Static Method for Overriding Entry Elements'''
         obj.clear()
         obj.send_keys(text)
     
