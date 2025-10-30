@@ -20,11 +20,6 @@ class Test():
         pass_entry = self.driver.find_element(By.ID, "input-password")
         pass_entry.send_keys("Loginpage@" + Keys.ENTER) 
         time.sleep(5)
-
-#         pass_entry.send_keys("Loginpage@")
-#         submit_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/div/div[2]/div/div/form/input")
-#         submit_btn.click()
-
         # Validation
         if self.driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/account":
             print("Login Successful")
@@ -63,7 +58,6 @@ class Test():
                 print(f"Failed to Compare Products (Unknown Exception: {e}).")
 
         return False
-
 
     def check_remove_comparison(self) -> bool:
         # Check if Adding Process Works
@@ -343,11 +337,11 @@ class Test():
         self.driver.quit()
 
 if __name__ == "__main__":
-    login = Test(url='https://ecommerce-playground.lambdatest.io/index.php?route=account/login')
+    #login = Test(url='https://ecommerce-playground.lambdatest.io/index.php?route=account/login')
     # print(login.check_submit_review())
     # print(login.check_blog_comment())
     # print(login.check_quantity())
-    login.close()
+    #login.close()
     
     # Test for Comparing Products
     #comp_test = Test(url="https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=20")
