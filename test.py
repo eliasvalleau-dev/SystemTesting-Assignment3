@@ -17,7 +17,6 @@ class Test():
             EC.presence_of_element_located((By.ID, "input-email"))
         )
         email_entry.send_keys("elias.valle@student.uts.edu.au")
-
         pass_entry = self.driver.find_element(By.ID, "input-password")
         pass_entry.send_keys("Loginpage@" + Keys.ENTER) 
         time.sleep(5)
@@ -25,6 +24,7 @@ class Test():
 #         pass_entry.send_keys("Loginpage@")
 #         submit_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[5]/div[1]/div/div/div/div[2]/div/div/form/input")
 #         submit_btn.click()
+
         # Validation
         if self.driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/account":
             print("Login Successful")
@@ -346,7 +346,7 @@ if __name__ == "__main__":
     login = Test(url='https://ecommerce-playground.lambdatest.io/index.php?route=account/login')
     # print(login.check_submit_review())
     # print(login.check_blog_comment())
-    print(login.check_quantity())
+    # print(login.check_quantity())
     login.close()
     
     # Test for Comparing Products
